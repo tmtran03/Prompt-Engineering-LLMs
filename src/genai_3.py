@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1p5WXdI_RdIYLuNv-ro9EbmxowkMRxQi-
 """
 
-!pip install datasets evaluate sentencepiece sacrebleu pandas
 
 import os
 import json
@@ -25,6 +24,7 @@ import evaluate
 # grab the token from the token.txt file
 with open("token.txt", "r") as f:
   GITHUB_TOKEN = f.read().strip()
+
 
 
 # Initialize the OpenAI client (replace base_url if needed)
@@ -115,8 +115,8 @@ def greet(username):
 -- reviews(id INT PRIMARY KEY, user_id INT REFERENCES users(id), book_id INT REFERENCES books(id), rating INT);
 """,
         "strategies": {
-            "zero_shot": "Write SQL schema (tables, primary & foreign keys) for a review app with users, books, and reviews.",
-            "self_consistency": "Write the SQL schema for a review app."
+            "zero_shot": "Write SQL schema (tables, primary & foreign keys) for a review app with users, books, and reviews. -- TODO : Design schema with appropriate keys and constraints -- Tables : users (id , name ), books (id , title ), reviews (id , user_id , book_id , rating )",
+            "self_consistency": "Write SQL schema (tables, primary & foreign keys) for a review app with users, books, and reviews. -- TODO : Design schema with appropriate keys and constraints -- Tables : users (id , name ), books (id , title ), reviews (id , user_id , book_id , rating )"
         }
     },
     "task07_null_deref_java": {
@@ -174,143 +174,107 @@ def is_prime(n):
             "prompt_chaining": "Step 1: Write a system instruction that sets the task.\nStep 2: Provide the comment and ask for implementation for the following code:"
         }
     },
-    "task12_optimize_loop": {
-        "type": "analysis",
-        "snippet": """squares = []
-for i in range(1000000):
-    squares.append(i * i)
-""",
-        "strategies": {
-            "zero_shot": "Optimize the following Python loop for performance:",
-            "chain_of_thought": "Explain step-by-step how you would optimize the following loop:"
-        }
-    },
-    "task13_data_class_java": {
-        "type": "analysis",
-        "snippet": """public class Person {
-    private String name;
-    private int age;
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
+    "task12_fix_factorial_bug": {
+    "type": "bug_fixing",
+    "snippet": "def factorial(n):\n    result = 1\n    for i in range(1, n):\n        result *= i\n    return result",
+    "strategies": {
+        "self-consistency": "The logic fails for n = 0 due to incorrect loop bounds. Revise it so the function returns 1 for 0 and behaves consistently for all inputs.",
+        "chain-of-thought": "Step-by-step, identify how the loop behaves for n = 0 and adjust it to include the base case explicitly."
     }
-    public String getName() { return name; }
-    public int getAge() { return age; }
-}
-""",
-        "strategies": {
-            "zero_shot": "Convert the following Java class into a Java 16+ record:",
-            "few_shot": "Example:\nInput: public class Point { int x; int y; public Point(int x, int y) { this.x = x; this.y = y; } }\nOutput: record Point(int x, int y) {}\n\nNow convert the following class:"
-        }
-    },
-    "task14_unit_test_py": {
-        "type": "analysis",
-        "snippet": """def is_even(n):
-    return n % 2 == 0
-""",
-        "strategies": {
-            "zero_shot": "Write unit tests using `unittest` for the following function:",
-            "few_shot": "Example:\nFunction: def add(a, b): return a + b\nTest: assert add(2, 3) == 5\n\nNow test the following function:"
-        }
-    },
-    "task15_refactor_nested_if": {
-        "type": "analysis",
-        "snippet": """if user:
-    if user.is_active:
-        if user.is_admin:
-            return True
-""",
-        "strategies": {
-            "chain_of_thought": "Refactor the following nested `if` statements for clarity. Explain your reasoning:",
-            "zero_shot": "Simplify the following nested `if` statements:"
-        }
-    },
-    "task16_detect_infinite_loop": {
-        "type": "analysis",
-        "snippet": """i = 0
-while i < 5:
-    print(i)
-""",
-        "strategies": {
-            "chain_of_thought": "Walk through the logic step-by-step to detect any infinite loop in the following code:",
-            "prompt_chaining": "Step 1: Simulate what the following loop does.\nStep 2: Determine if it ever terminates:"
-        }
-    },
-    "task17_javadoc_summary": {
-        "type": "analysis",
-        "snippet": """/**
- *
- */
-public int factorial(int n) {
-    if (n <= 1) return 1;
-    return n * factorial(n - 1);
-}
-""",
-        "strategies": {
-            "zero_shot": "Generate a Javadoc summary for the following method:",
-            "chain_of_thought": "First describe what the following method does, then generate a Javadoc summary:"
-        }
-    },
-    "task18_comment_generator": {
-        "type": "analysis",
-        "snippet": """def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n-1)
-""",
-        "strategies": {
-            "prompt_chaining": "Step 1: Identify the purpose of each line.\nStep 2: Add comments to the following code:",
-            "zero_shot": "Add comments to the following recursive factorial function:"
-        }
-    },
-    "task19_code_translation_py2java": {
-        "type": "analysis",
-        "snippet": """def square(n):
-    return n * n
-""",
-        "strategies": {
-            "zero_shot": "Translate the following Python function to Java:",
-            "prompt_chaining": "Step 1: Describe what the following function does.\nStep 2: Translate it into Java:"
-        }
-    },
-    "task20_sorting_explanation": {
-        "type": "generation",
-        "expected": "Merge sort divides the array into halves, recursively sorts them, and merges the results.",
-        "strategies": {
-            "few_shot": "Example:\nInput: Bubble Sort\nOutput: Bubble sort repeatedly compares and swaps adjacent elements.\n\nNow explain Merge Sort:",
-            "zero_shot": "Explain how merge sort works in simple terms:"
-        }
-    },
-    "task21_missing_docstring": {
-        "type": "analysis",
-        "snippet": """def add(a, b):
-    return a + b
-""",
-        "strategies": {
-            "chain_of_thought": "Describe what the following function does step-by-step, then write a docstring:",
-            "zero_shot": "Write a docstring for the following function:"
-        }
-    },
-    "task22_variable_renaming": {
-        "type": "analysis",
-        "snippet": """a = 5
-b = 10
-print(a + b)
-""",
-        "strategies": {
-            "few_shot": "Example:\nInput: a=5, b=10, return a+b\nOutput: num1=5, num2=10, return num1+num2\n\nNow rename variables to be more descriptive in the following code:",
-            "chain_of_thought": "Reason step-by-step to rename variables for clarity in the following code:"
-        }
+},
+"task13_delete_linked_list_node": {
+    "type": "data_structure",
+    "snippet": "struct Node {\n    int data;\n    struct Node *next;\n};\nvoid deleteNode(struct Node **head, int key) {\n    // TODO : Implement node deletion\n}",
+    "strategies": {
+        "few-shot": "Example:\nInput: struct Node *head; int key = 4;\nOutput: Node with value 4 is removed from the list.\n\nNow remove the node with the given key from the linked list.",
+        "chain-of-thought": "Step-by-step, walk through identifying the target node and safely unlinking it."
     }
+},
+"task14_recursive_fibonacci": {
+    "type": "function_completion",
+    "snippet": "def fibonacci(n):\n    # TODO : Base cases and recursive call\n    pass",
+    "strategies": {
+        "zero-shot": "Complete the recursive Fibonacci function to return the nth number.",
+        "few-shot": "Example:\nInput: fibonacci(0) → 0\nInput: fibonacci(1) → 1\nOutput: fibonacci(5) → 5\n\nNow implement the recursive function:"
+    }
+},
+"task15_constructor_completion": {
+    "type": "class_definition",
+    "snippet": "class Person:\n    def __init__(self):\n        # TODO : Add name , age , and optional email\n        pass",
+    "strategies": {
+        "zero-shot": "Write a constructor that initializes `name`, `age`, and optional `email` fields.",
+        "prompt chaining": "Step 1: Identify which attributes should be stored.\nStep 2: Use parameters in `__init__` to initialize them."
+    }
+},
+"task16_binary_search_java": {
+    "type": "algorithm_completion",
+    "snippet": "public int binarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length - 1;\n    while (left <= right) {\n        int mid = (left + right) / 2;\n        // TODO : Compare and adjust bounds\n    }\n    return -1;\n}",
+    "strategies": {
+        "few-shot": "Example:\nInput: binarySearch([1, 3, 5, 7], 5) → 2\nNow implement binary search to find the target in the array.",
+        "chain-of-thought": "Step-by-step, adjust the left/right bounds depending on how mid compares to the target."
+    }
+},
+"task17_fix_even_logic": {
+    "type": "self_consistency",
+    "snippet": "bool isOdd(int x) {\n    return x % 2 == 0;\n}",
+    "strategies": {
+        "self-consistency": "The function is named isOdd but returns true for even numbers. Fix the logic or rename the function to match its behavior.",
+        "chain-of-thought": "Step-by-step, identify the contradiction between the function’s intent and logic, then revise accordingly."
+    }
+},
+"task18_fix_js_is_even": {
+    "type": "bug_fixing",
+    "snippet": "function isEven(n) {\n    return n % 2; // Returns 1 or 0 , not true / false\n}",
+    "strategies": {
+        "zero-shot": "Fix the function so it returns a Boolean value when checking for even numbers.",
+        "prompt chaining": "Step 1: Identify what `n % 2` returns.\nStep 2: Modify the function so the result is explicitly a Boolean."
+    }
+},
+"task19_decompose_summary_cpp": {
+    "type": "code_decomposition",
+    "snippet": "int process(int x) {\n    if (x < 0) return -1;\n    return x * x;\n}",
+    "strategies": {
+        "chain-of-thought": "Step-by-step, explain what the function checks and how it transforms the input.",
+        "prompt chaining": "Step 1: Validate input.\nStep 2: Describe the square operation and why it's used."
+    }
+},
+"task20_calculate_average": {
+    "type": "function_completion",
+    "snippet": "def calculate_average(scores):\n    total = 0\n    # TODO : Complete to return average\n    pass",
+    "strategies": {
+        "few-shot": "Example:\nInput: [90, 80, 70] → Output: 80.0\nNow complete the function to return the average score.",
+        "chain-of-thought": "Step-by-step, explain how to sum the elements and divide by the count for the average."
+    }
+},
+"task21_refactor_utils": {
+    "type": "refactoring",
+    "snippet": "# utils.py\nimport csv\n\ndef read_csv(filepath):\n    with open(filepath, 'r') as f:\n        return [row for row in csv.reader(f)]\n\ndef summarize_column(data, index):\n    values = [float(row[index]) for row in data[1:]]\n    total = sum(values)\n    avg = total / len(values)\n    return total, avg\n\ndef main():\n    filepath = 'data.csv'\n    data = read_csv(filepath)\n    total, avg = summarize_column(data, 1)\n    print(\"Total:\", total)\n    print(\"Average:\", avg)\n\nif __name__ == '__main__':\n    main()",
+    "strategies": {
+        "prompt chaining": "Step 1: Read the CSV file safely.\nStep 2: Summarize the column.\nStep 3: Identify areas to improve structure or error handling.",
+        "self-consistency": "Ensure the logic is robust when parsing input and summarizing data. Refactor to avoid assumptions like non-empty input."
+    }
+},
+"task22_complete_file_processor": {
+    "type": "function_completion",
+    "snippet": "# file_processor.py\nimport string\n\ndef load_file(filepath):\n    with open(filepath, 'r') as f:\n        return f.readlines()\n\ndef clean_line(line):\n    # TODO : Remove punctuation and make lowercase\n    pass\n\ndef count_words(lines):\n    word_counts = {}\n    for line in lines:\n        clean = clean_line(line)\n        for word in clean.split():\n            word_counts[word] = word_counts.get(word, 0) + 1\n    return word_counts\n\ndef main():\n    filepath = 'input.txt'\n    lines = load_file(filepath)\n    counts = count_words(lines)\n    for word, count in sorted(counts.items()):\n        print(f\"{word}: {count}\")\n\nif __name__ == '__main__':\n    main()",
+    "strategies": {
+        "zero-shot": "Complete the missing cleaning logic and make sure word frequencies are calculated correctly.",
+        "prompt chaining": "Step 1: Describe how to normalize and clean a line of text.\nStep 2: Integrate the cleaned lines into the word counting logic."
+    }
+}
+
 }
 
 
 # Helper to build the prompt based on task type
 def build_prompt(prefix, snippet=None):
     if snippet:
-        lang = 'java' if 'java' in snippet else 'python' if 'def' in snippet else 'cpp'
-        return f"{prefix}\n```{lang}\n{snippet}\n```"
-    return prefix
+        lang = 'java' if 'public' in snippet else 'python' if 'def' in snippet else 'cpp'
+        prompt = f"{prefix}\n```{lang}\n{snippet}\n```"
+    else:
+        prompt = f"{prefix}\n```{snippet}\n```"
+    print("📝 PROMPT:\n", prompt)    # ← right here
+    return prompt
 
 # Safe chat completion with retry
 def safe_chat_completion(model, prompt, max_retries=3):
@@ -397,7 +361,7 @@ def worker(args):
 def generate_all():
     jobs = []
     for task_key, info in EXAMPLES.items():
-        snippet = info.get("snippet") if info["type"] == "analysis" else None
+        snippet = info.get("snippet")
         for strat_key, prefix in info["strategies"].items():
             prompt = build_prompt(prefix, snippet)
             for model_id, model_name in MODEL_CONFIG:
