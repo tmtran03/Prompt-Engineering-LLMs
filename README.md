@@ -67,7 +67,7 @@ After the model is ran, then the script with the prompt, strategy uses, and outp
 
 Navigate to the ```src``` directory, then run:
 ```shell
-(venv) ~/Prompt-Engineering-LLMs $ python genai_3.py
+(venv) ~/Prompt-Engineering-LLMs $ python src/genai_3.py
 ```
 
 ## 3. Report
