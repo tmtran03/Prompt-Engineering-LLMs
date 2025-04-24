@@ -30,7 +30,7 @@ with open("token.txt", "r") as f:
 # Initialize the OpenAI client (replace base_url if needed)
 client = OpenAI(
     base_url="https://models.inference.ai.azure.com",
-    api_key=os.getenv('GITHUB_TOKEN') or os.getenv('OPENAI_API_KEY')
+    api_key=GITHUB_TOKEN
 )
 
 # Define models
