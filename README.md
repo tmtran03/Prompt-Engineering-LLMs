@@ -31,7 +31,6 @@ This project is implemented in **Python 3.9+** and is compatible with **macOS, L
 (3) Set up a virtual environment and activate it:
 ```
 For macOS/Linux:
-```shell
 ~/Prompt-Engineering-LLMs $ python -m venv ./venv/
 ~/Prompt-Engineering-LLMs $ source venv/bin/activate
 (venv) ~/Prompt-Engineering-LLMs $ 
