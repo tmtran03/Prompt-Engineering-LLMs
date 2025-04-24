@@ -12,6 +12,8 @@
 # **1. Introduction**  
 Prompt Engineering for In-Context Learning explores how different prompt designs influence Large Language Models (LLMs) in solving diverse software engineering tasks. In this assignment, we applied five strategies—zero-shot, few-shot, chain-of-thought, prompt-chaining, and BLEU-based self-consistency—to 22 problems ranging from code summarization and bug fixing to API generation and code translation. Our experiments compare two models—ChatGPT (gpt-4o-mini) and Codestral-2501—deployed on Azure, demonstrating how strategic prompt examples and structured reasoning affect code quality and clarity. Temperature is set to 0.7, and the token limit is 1024 for all tables.
 
+The purpose of the code is to automate the generation of responses to our prewritten prompts.
+
 ---
 
 # **2. Getting Started**  
@@ -31,7 +33,6 @@ This project is implemented in **Python 3.9+** and is compatible with **macOS, L
 (3) Set up a virtual environment and activate it:
 ```
 For macOS/Linux:
-```shell
 ~/Prompt-Engineering-LLMs $ python -m venv ./venv/
 ~/Prompt-Engineering-LLMs $ source venv/bin/activate
 (venv) ~/Prompt-Engineering-LLMs $ 
@@ -66,7 +67,7 @@ After the model is ran, then the script with the prompt, strategy uses, and outp
 
 Navigate to the ```src``` directory, then run:
 ```shell
-(venv) ~/Prompt-Engineering-LLMs $ python genai_3.py
+(venv) ~/Prompt-Engineering-LLMs $ python src/genai_3.py
 ```
 
 ## 3. Report
